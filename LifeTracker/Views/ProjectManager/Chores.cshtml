@@ -1,0 +1,113 @@
+﻿@{
+    ViewBag.Title = "Project Manager";
+}
+<div class="jumbotron">
+    <h1>Chore List</h1>
+    <p class="lead">Showing chore list for @ViewBag.UserName</p>
+</div>
+
+<div class="row">
+    <form method="POST" action="/ProjectManager/AddChore">
+        <div class="form-inline">
+            <div class="form-group">
+                <input type="text" id="ChoreName" name="ChoreName" class="form-control" placeholder="Chore Name" />
+            </div>
+            <div class="form-group">
+                <input type="text" id="ChoreDescription" name="ChoreDescription" class="form-control" placeholder="Chore Description" />
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("ChoreType", EnumHelper.GetSelectList(typeof(LifeTracker.Models.DB.ChoreType)),
+                "Select Chore Type", new { @class = "form-control"})
+            </div>
+            <div class="form-group">
+                <button id="btnAddChore" class="btn btn-primary">Add Chore</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">   
+    <div class="col-md-4">
+        One Time Chores
+        <div data-bind="foreach: onetimechores">
+            <div><strong data-bind="text: ChoreName"></strong></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        Daily Chores
+        <div data-bind="foreach: dailychores">
+            <div><strong data-bind="text: ChoreName"></strong></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        Weekly Chores
+        <div data-bind="foreach: weeklychores">
+            <div><strong data-bind="text: ChoreName"></strong></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        Monthly Chores
+        <div data-bind="foreach: monthlychores">
+            <div><strong data-bind="text: ChoreName"></strong></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        Yearly Chores
+        <div data-bind="foreach: yearlychores">
+            <div><strong data-bind="text: ChoreName"></strong></div>
+        </div>
+    </div>
+
+</div>
+@section scripts{
+    <script language="javascript">
+        var modelData = @Html.Raw(Json.Encode(Model.Data));
+
+        ko.utils.ChoreOfType = function(choretypename, filter){
+            if(choretypename == filter){
+                return true;
+            }
+            return false;
+        }
+
+        ko.utils.FilterChores = function(array, filter){
+            if(filter < 0){
+                return array;
+            }else{
+                return ko.utils.arrayFilter(array, function(item){
+                    return ko.utils.ChoreOfType(item.ChoreType, filter);
+                });
+            }
+        }
+            
+        function ChoresViewModel(){
+            var self = this;
+            self.chores = ko.observableArray(modelData["Chores"]);
+            self.onetimechores = ko.computed(function(){
+                return ko.utils.FilterChores(self.chores(), 5);            
+            }, self);
+            self.dailychores = ko.computed(function(){
+                return ko.utils.FilterChores(self.chores(), 0);
+            }, self);
+            
+            self.weeklychores = ko.computed(function(){
+                return ko.utils.FilterChores(self.chores(), 1);
+            }, self);
+            
+            self.monthlychores = ko.computed(function(){
+                return ko.utils.FilterChores(self.chores(), 2);
+            }, self);
+            
+            self.biyearlychores = ko.computed(function(){
+                return ko.utils.FilterChores(self.chores(), 3);
+            }, self);
+            
+            self.yearlychores = ko.computed(function(){
+                return ko.utils.FilterChores(self.chores(), 4);
+            }, self);
+        }
+        ko.applyBindings(new ChoresViewModel());
+        $(document).ready(function () {
+
+        });
+    </script>
+}
