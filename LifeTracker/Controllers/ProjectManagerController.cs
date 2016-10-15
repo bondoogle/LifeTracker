@@ -38,12 +38,17 @@ namespace LifeTracker.Controllers
             _userrepo.Save();
             return RedirectToAction("Chores");
         }
-            
+        //TODO: Still need to add Edit, View, and Delete of Chores
+
+        //TODO: Still need to add Add, Edit, View, and Delete of Projects
+
+        //TODO: Still need to add Add, Edit, View, and Delete of Timers
         public ActionResult TimeTracker()
         {
             return View();
         }
 
+        //TODO: Still need to add Settings page
         public ActionResult Settings()
         {
             return View();
