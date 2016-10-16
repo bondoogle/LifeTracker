@@ -7,7 +7,7 @@ using LifeTracker.Models;
 
 namespace LifeTracker.Controllers
 {
-    public class ProjectManagerController : CustomController
+    public class TimeManagerController : CustomController
     {
         // GET: ProjectManager
         public ActionResult Index()

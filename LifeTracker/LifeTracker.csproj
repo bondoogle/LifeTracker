@@ -166,7 +166,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ProjectManagerController.cs" />
+    <Compile Include="Controllers\TimeManagerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -243,12 +243,11 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Finances\Index.cshtml" />
     <Content Include="Views\Diet\Index.cshtml" />
-    <Content Include="Views\ProjectManager\Index.cshtml" />
+    <Content Include="Views\TimeManager\Index.cshtml" />
     <Content Include="Views\Inventory\Index.cshtml" />
-    <Content Include="Views\ProjectManager\Chores.cshtml" />
-    <Content Include="Views\ProjectManager\Projects.cshtml" />
-    <Content Include="Views\ProjectManager\TimeTracker.cshtml" />
-    <Content Include="Views\ProjectManager\Settings.cshtml" />
+    <Content Include="Views\TimeManager\Chores.cshtml" />
+    <Content Include="Views\TimeManager\TimeTracker.cshtml" />
+    <Content Include="Views\TimeManager\Settings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
