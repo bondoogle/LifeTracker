@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Mvc.Filters;
+using System.Web.Routing;
+using LifeTracker.Models;
 
-namespace LifeTracker.Models
+namespace LifeTracker
 {
     public class HelperTools
     {
@@ -18,6 +21,53 @@ namespace LifeTracker.Models
         public CustomController()
         {
             _userrepo = new DAL.UserRepository(new Models.DB.Context());
+        }
+        
+        protected override void Initialize(RequestContext requestContext)
+        {
+            base.Initialize(requestContext);
+        }
+
+        protected override void OnAuthentication(AuthenticationContext filterContext)
+        {
+
+            base.OnAuthentication(filterContext);
+        }
+
+        protected override void OnAuthorization(AuthorizationContext filterContext)
+        {
+            base.OnAuthorization(filterContext);
+        }
+
+        protected override void OnAuthenticationChallenge(AuthenticationChallengeContext filterContext)
+        {
+            base.OnAuthenticationChallenge(filterContext);
+        }
+
+        protected override void HandleUnknownAction(string actionName)
+        {
+            base.HandleUnknownAction(actionName);
+        }
+
+
+        protected override IAsyncResult BeginExecute(RequestContext requestContext, AsyncCallback callback, object state)
+        {
+            return base.BeginExecute(requestContext, callback, state);
+        }
+
+        protected override void Execute(RequestContext requestContext)
+        {
+            base.Execute(requestContext);
+        }
+
+        protected override void EndExecuteCore(IAsyncResult asyncResult)
+        {
+            base.EndExecuteCore(asyncResult);
+        }
+
+        protected override void OnException(ExceptionContext filterContext)
+        {
+            base.OnException(filterContext);
         }
 
         protected DB.User VerifyUser()
@@ -43,5 +93,5 @@ namespace LifeTracker.Models
             _userrepo.Dispose();
             base.Dispose(disposing);
         }
-    }
+    }    
 }

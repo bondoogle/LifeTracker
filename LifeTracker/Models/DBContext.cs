@@ -50,6 +50,11 @@ namespace LifeTracker.Models
             public string ChoreDescription { get; set; }
             public ChoreType ChoreType { get; set; }
             public DateTime DateCreated { get; set; }
+
+            public Chore()
+            {
+                DateCreated = DateTime.Now;
+            }
         }
     }
 }

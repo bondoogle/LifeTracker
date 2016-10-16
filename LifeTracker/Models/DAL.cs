@@ -30,6 +30,11 @@ namespace LifeTracker.DAL
         {
             return user.Chores.ToList();
         }
+
+        public DB.Chore GetUserChore(DB.User user, int choreid)
+        {
+            return user.Chores.FirstOrDefault(c => c.ChoreId == choreid);
+        }
         
         public void Save()
         {

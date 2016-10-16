@@ -28,17 +28,72 @@ namespace LifeTracker.Controllers
 
         public ActionResult AddChore(FormViewModels.AddChoreFormModel form)
         {
+            if (!User.Identity.IsAuthenticated)
+                return Json(new { Status = "401", Message = "Unauthorized request" });
+
+            
+            if(form.ChoreName == null || form.ChoreType == null)
+            {
+                if (HttpContext.Request.IsAjaxRequest())
+                {
+                    return Json(new { result = "failure", error = "invalid_values" });
+                }
+            }
+
             var user = VerifyUser();
             var c = new DB.Chore();
             c.ChoreName = form.ChoreName;
-            c.ChoreType = (DB.ChoreType)Enum.Parse(typeof(DB.ChoreType), form.ChoreType);
+            try {
+                c.ChoreType = (DB.ChoreType)Enum.Parse(typeof(DB.ChoreType), form.ChoreType);
+            }catch(Exception ex)
+            {
+                return Json(new { result = "failure", error = "invalid_chore_type" });
+            }
             c.ChoreDescription = form.ChoreDescription;
-            c.DateCreated = DateTime.Now;
+            //c.DateCreated = DateTime.Now;
             user.Chores.Add(c);
             _userrepo.Save();
-            return RedirectToAction("Chores");
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                return Json(new { result="success", newchore=c });
+            }
+            else
+            {
+                return RedirectToAction("Chores");
+            }
+        }
+        
+        public ActionResult RemoveChore(int choreid)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return Json(new { Status = "401", Message = "Unauthorized request" });
+
+
+            if (choreid <= 0)
+            {
+                if (HttpContext.Request.IsAjaxRequest())
+                {
+                    return Json(new { result = "failure", error = "invalid_values" });
+                }
+            }
+
+            var user = VerifyUser();
+
+            var c = _userrepo.GetUserChore(user, choreid);
+            //c.DateCreated = DateTime.Now;
+            user.Chores.Remove(c);
+            _userrepo.Save();
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                return Json(new { result = "success", oldchoreid=c.ChoreId});
+            }
+            else
+            {
+                return RedirectToAction("Chores");
+            }
         }
         //TODO: Still need to add Edit, View, and Delete of Chores
+
 
         //TODO: Still need to add Add, Edit, View, and Delete of Projects
 

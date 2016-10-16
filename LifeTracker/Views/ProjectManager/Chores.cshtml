@@ -6,8 +6,8 @@
     <p class="lead">Showing chore list for @ViewBag.UserName</p>
 </div>
 
-<div class="row">
-    <form method="POST" action="/ProjectManager/AddChore">
+<div class="row text-center">
+    <!--<form method="POST" action="/ProjectManager/AddChore">-->
         <div class="form-inline">
             <div class="form-group">
                 <input type="text" id="ChoreName" name="ChoreName" class="form-control" placeholder="Chore Name" />
@@ -23,37 +23,102 @@
                 <button id="btnAddChore" class="btn btn-primary">Add Chore</button>
             </div>
         </div>
-    </form>
+    <!--</form>-->
 </div>
 <div class="row">   
     <div class="col-md-4">
         One Time Chores
-        <div data-bind="foreach: onetimechores">
-            <div><strong data-bind="text: ChoreName"></strong></div>
+        <div class="panel panel-default" data-bind="foreach: onetimechores">
+            <div class="panel-heading">
+                <h4 class="col-md-10" style="margin-top: 0px; padding-top: 0px;">
+                    <span data-bind="text: ChoreName"></span>
+                </h4>
+                <div class="col-md-1 text-right">
+                    <span class="glyphicon glyphicon-trash text-right" data-bind="click: RemoveChore" />
+                </div>
+                &nbsp;
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <span data-bind="text:ChoreDescription"></span>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-md-4">
         Daily Chores
-        <div data-bind="foreach: dailychores">
-            <div><strong data-bind="text: ChoreName"></strong></div>
+        <div class="panel panel-default" data-bind="foreach: dailychores">
+            <div class="panel-heading">
+                <h4 class="col-md-10" style="margin-top: 0px; padding-top: 0px;">
+                    <span data-bind="text: ChoreName"></span>
+                </h4>
+                <div class="col-md-1 text-right">
+                    <span class="glyphicon glyphicon-trash text-right" data-bind="click: RemoveChore" />
+                </div>
+                &nbsp;
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <span data-bind="text:ChoreDescription"></span>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-md-4">
         Weekly Chores
-        <div data-bind="foreach: weeklychores">
-            <div><strong data-bind="text: ChoreName"></strong></div>
+        <div class="panel panel-default" data-bind="foreach: weeklychores">
+            <div class="panel-heading">
+                <h4 class="col-md-10" style="margin-top: 0px; padding-top: 0px;">
+                    <span data-bind="text: ChoreName"></span>
+                </h4>
+                <div class="col-md-1 text-right">
+                    <span class="glyphicon glyphicon-trash text-right" data-bind="click: RemoveChore" />
+                </div>
+                &nbsp;
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <span data-bind="text:ChoreDescription"></span>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-md-4">
         Monthly Chores
-        <div data-bind="foreach: monthlychores">
-            <div><strong data-bind="text: ChoreName"></strong></div>
+        <div class="panel panel-default" data-bind="foreach: monthlychores">
+            <div class="panel-heading">
+                <h4 class="col-md-10" style="margin-top: 0px; padding-top: 0px;">
+                    <span data-bind="text: ChoreName"></span>
+                </h4>
+                <div class="col-md-1 text-right">
+                    <span class="glyphicon glyphicon-trash text-right" data-bind="click: RemoveChore" />
+                </div>
+                &nbsp;
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <span data-bind="text:ChoreDescription"></span>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-md-4">
         Yearly Chores
-        <div data-bind="foreach: yearlychores">
-            <div><strong data-bind="text: ChoreName"></strong></div>
+        <div class="panel panel-default" data-bind="foreach: yearlychores">
+            <div class="panel-heading">
+                <h4 class="col-md-10" style="margin-top: 0px; padding-top: 0px;">
+                    <span data-bind="text: ChoreName"></span>
+                </h4>
+                <div class="col-md-1 text-right">
+                    <span class="glyphicon glyphicon-trash text-right" data-bind="click: RemoveChore" />
+                </div>
+                &nbsp;
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <span data-bind="text:ChoreDescription"></span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -82,6 +147,14 @@
         function ChoresViewModel(){
             var self = this;
             self.chores = ko.observableArray(modelData["Chores"]);
+            
+            self.addChore = function (chore) {
+                self.chores.push(chore);
+            }
+            self.removeChore = function (chore) {
+                self.chores.remove(chore);
+            }
+
             self.onetimechores = ko.computed(function(){
                 return ko.utils.FilterChores(self.chores(), 5);            
             }, self);
@@ -105,9 +178,75 @@
                 return ko.utils.FilterChores(self.chores(), 4);
             }, self);
         }
-        ko.applyBindings(new ChoresViewModel());
-        $(document).ready(function () {
+        
+        var koChore = new ChoresViewModel();
 
+        ko.applyBindings(koChore);
+        $(document).ready(function () {
+            $("#btnAddChore").click(AddChore);
         });
+
+        function ResetNewChoreForm() {
+            $("#ChoreName").val("");
+            $("#ChoreDescription").val("");
+            $("#ChoreType").val("");
+        }
+        function AddChore() {
+            var data = "ChoreName=" + encodeURI($("#ChoreName").val()) + "&ChoreDescription=" + $("#ChoreDescription").val() + "&ChoreType=" + $("#ChoreType").val();            
+            var headers = {};
+            $.ajax({
+                type: 'POST',
+                url: '/ProjectManager/AddChore',
+                data: data,
+                header: headers,
+                processData: false,
+                contentType: "application/x-www-form-urlencoded"
+            }).success(AddChoreSuccess
+            ).fail(AddChoreFail);
+        }
+        function AddChoreSuccess(response, status, jqHXR) {
+            if (response["result"] == "success") {
+                var newchore = response["newchore"];
+                koChore.addChore(newchore);
+                ResetNewChoreForm();
+                $("#ChoreName").focus();
+            } else {
+                console.log(response);
+            }
+        }
+        function AddChoreFail(jqXHR, status, err) {
+            console.log(jqXHR);
+            console.log(status);
+            console.log(err);
+        }
+
+        function RemoveChore() {
+            var c = this;
+            var data = "choreid=" + c["ChoreId"];            
+            var headers = {};
+            $.ajax({
+                type: 'POST',
+                url: '/ProjectManager/RemoveChore',
+                data: data,
+                header: headers,
+                processData: false,
+                contentType: "application/x-www-form-urlencoded"
+            }).success(function(response, status, jqHXR) {
+                RemoveChoreSuccess(response, status, jqHXR, c);
+            }
+            ).fail(RemoveChoreFail);
+        }
+        function RemoveChoreSuccess(response, status, jqHXR, chore) {
+            if (response["result"] == "success") {
+                koChore.removeChore(chore);
+            } else {
+                console.log(response);
+            }
+        }
+        function RemoveChoreFail(jqXHR, status, err) {
+            console.log(jqXHR);
+            console.log(status);
+            console.log(err);
+        }
     </script>
 }
